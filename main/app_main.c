@@ -116,8 +116,10 @@ static void mqtt_event_handler(void *handler_args, esp_event_base_t base, int32_
     }
 }
 
+// Start MQTT service
 static void mqtt_app_start(void)
 {
+    // Configure mttq URI
     const esp_mqtt_client_config_t mqtt_cfg = {
         .broker.address.uri = CONFIG_BROKER_URI,
     };
@@ -128,42 +130,47 @@ static void mqtt_app_start(void)
     esp_mqtt_client_start(client);
 }
 
+// Start LED
 static void led_start(void)
 {
+    // Create event group for LED
     s_led_state_event_group = xEventGroupCreate();
     ESP_LOGI(TAG_LED, "Group Event s_led_state_event_group created");
 
+    // Configure LED
     gpio_config_t led_conf = {
-        .pin_bit_mask = (1ULL << LED_PIN),
-        .mode = GPIO_MODE_OUTPUT,
-        .pull_up_en = GPIO_PULLUP_DISABLE,
-        .pull_down_en = GPIO_PULLDOWN_DISABLE,
-        .intr_type = GPIO_INTR_DISABLE
+        .pin_bit_mask = (1ULL << LED_PIN),          // configure pins
+        .mode = GPIO_MODE_OUTPUT,                   // operation mode
+        .pull_up_en = GPIO_PULLUP_DISABLE,          // internal pull-up resistance enable or desable
+        .pull_down_en = GPIO_PULLDOWN_DISABLE,      // internal pull-down resistance enable or desable
+        .intr_type = GPIO_INTR_DISABLE              // interruption type
     };
 
+    // Configure LED in GPIO port
     gpio_config(&led_conf);
     ESP_LOGI(TAG_LED, "LED configured in port GPIO%d", LED_PIN);
 }
 
+
 static void led_task(void *param)
 {
     while (1) {
-        
+        // Configure bits for each specific event 
         EventBits_t bits = xEventGroupWaitBits(
-            s_led_state_event_group, 
-            LED_ON_BIT | LED_OFF_BIT,
-            pdTRUE,
-            pdFALSE,
-            portMAX_DELAY);
+            s_led_state_event_group,        // xEventGroup: the event group handler
+            LED_ON_BIT | LED_OFF_BIT,       // uxBitsToWaitFor: wait for one of the bits
+            pdTRUE,                         // xClearOnExit: Defines whether event bits should be cleared after the task is unlocked.
+            pdFALSE,                        // xWaitForAllBits: Set whether the task should expect all bits of the mask or just one
+            portMAX_DELAY);                 // xTicksToWait: Set whether the task should expect all bits of the mask or just one
 
         if (bits & LED_ON_BIT) {
             gpio_set_level(LED_PIN, 1);
-            ESP_LOGI(TAG_LED, "LED ON");
+            ESP_LOGI(TAG_LED, "LED ON");        // Set LED state to ON
         } else if (bits & LED_OFF_BIT) {
-            gpio_set_level(LED_PIN, 0);
+            gpio_set_level(LED_PIN, 0);         // Set LED state to OFF
             ESP_LOGI(TAG_LED, "LED OFF");
         }
-        vTaskDelay(pdMS_TO_TICKS(100));
+        vTaskDelay(pdMS_TO_TICKS(100));         // check the status of the led every 100 ms 
     }
 }
 
