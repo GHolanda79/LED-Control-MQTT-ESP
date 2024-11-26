@@ -17,107 +17,107 @@ This example can be executed on any ESP32 board, the required interface is WiFi 
 
 An mqtt broker (for example mosquitto) is required. To do this, you can use a Linux machine (example arch).
 
-Mosquitto installation in arch linux:
+Mosquitto installation in arch linux:  
 
 `` 
-sudo pacman -Syu mosquitto
+sudo pacman -Syu mosquitto  
 ``
 
-Enable service:
+Enable service:  
 
 ``
-sudo systemctl enable mosquitto 
+sudo systemctl enable mosquitto  
 ``
 
-Start Service:
+Start Service:  
 
 ``
-sudo systemctl start mosquitto
+sudo systemctl start mosquitto  
 ``
 
-Configure Mosquitto. Edit the file:
+Configure Mosquitto. Edit the file:  
 
 ``
-/etc/mosquitto/mosquitto.conf
+/etc/mosquitto/mosquitto.conf  
 ``
 
-**Always restart after any changes:
+**Always restart after any changes:  
 
 ``
-sudo systemctl restart mosquitto
+sudo systemctl restart mosquitto  
 ``
 
-In the configuration file, uncomment and add the lines:
+In the configuration file, uncomment and add the lines:  
 
 ``
-listener 9001
+listener 9001  
 ``
 
-Verify listen ports:
+Verify listen ports:  
 
 ``
-netstat -tuln | grep 9001
+netstat -tuln | grep 9001  
 ``
 
-Add rules to firewall iptables:
+Add rules to firewall iptables:  
 
 ``
-sudo iptables -A INPUT -p tcp --dport 9001 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 9001 -j ACCEPT  
 ``
 
-Enable websockets:
+Enable websockets:  
 
 ``
-protocol websockets
+protocol websockets  
 ``
 
-Enable anonymous users(only for tests):
+Enable anonymous users(only for tests):  
 
 ``
-allow_anonymous true
+allow_anonymous true  
 ``
 
-Permit logs:
+Permit logs:  
 
 ``
-log_type all
+log_type all  
 ``
 
-Log file path:
+Log file path:  
 
 ``
-log_dest file /var/log/mosquitto.log
+log_dest file /var/log/mosquitto.log  
 ``
 
-Create mosquitto log file:
+Create mosquitto log file:  
 
 ``
-sudo touch /var/log/mosquitto.log
+sudo touch /var/log/mosquitto.log  
 ``
 
-Set mosquitto log file owner:
+Set mosquitto log file owner:  
 
 ``
-sudo chown mosquitto:mosquitto /var/log/mosquitto.log
+sudo chown mosquitto:mosquitto /var/log/mosquitto.log  
 ``
 
-To give mosquitto permission to write:
+To give mosquitto permission to write:  
 
 ``
-sudo chmod 640 /var/log/mosquitto.log
+sudo chmod 640 /var/log/mosquitto.log  
 ``
 
-To monitor logs:
+To monitor logs:  
 
 ``
-tail -f /var/log/mosquitto.log
+tail -f /var/log/mosquitto.log  
 ``
 
 
-For test: server(broker) -> MQTT_message(TOPIC=/led/state; DATA=(ON | OFF)) -> client(ESP32)
+For test: server(broker) -> MQTT_message(TOPIC=/led/state; DATA=(ON | OFF)) -> client(ESP32)  
 
 ``
-mosquitto_pub -h serve_ip -t "TOPIC" -m "DATA"
+mosquitto_pub -h serve_ip -t "TOPIC" -m "DATA"  
 ``
 
 
@@ -125,11 +125,11 @@ mosquitto_pub -h serve_ip -t "TOPIC" -m "DATA"
 
 * Open the project configuration menu (`idf.py menuconfig`)
 * Configure Wi-Fi or Ethernet under "Example Connection Configuration" menu. 
-Set SSID and password to connect to Wi-Fi and Broker URL or 
-Set key CONFIG_EXAMPLE_WIFI_SSID="SSID"
-Set key CONFIG_EXAMPLE_WIFI_PASSWORD="password"
-Set key CONFIG_BROKER_URI="ws://server_ip:9001/"
-in sdkconfig and save.
+Set SSID and password to connect to Wi-Fi and Broker URL or  
+Set key CONFIG_EXAMPLE_WIFI_SSID="SSID"  
+Set key CONFIG_EXAMPLE_WIFI_PASSWORD="password"  
+Set key CONFIG_BROKER_URI="ws://server_ip:9001/"  
+in sdkconfig and save.  
 
 ### Build and Flash
 
