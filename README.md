@@ -17,102 +17,97 @@ This example can be executed on any ESP32 board, the required interface is WiFi 
 
 An mqtt broker (for example mosquitto) is required. To do this, you can use a Linux machine (example arch).
 
-Mosquitto installation in arch linux:<br>
+Mosquitto installation in arch linux:
 
-`` 
+``
 sudo pacman -Syu mosquitto
 ``
 
-Enable service:<br>
-
+Enable service:
 ``
 sudo systemctl enable mosquitto
 ``
 
-Start Service:<br>
-
+Start Servcie:
 ``
 sudo systemctl start mosquitto
 ``
 
-Configure Mosquitto. Edit the file:<br>
+Configure Mosquitto. Edit file: 
 
 ``
 /etc/mosquitto/mosquitto.conf
 ``
 
-**Always restart after any changes:<br>
+**Always restart after any changes:
 
 ``
 sudo systemctl restart mosquitto
 ``
 
-In the configuration file, uncomment and add the lines:<br>
-
+In the configuration file, uncomment and add the lines:
 ``
 listener 9001
 ``
 
-Verify listen ports:<br>
+Verify listen ports:
 
 ``
-netstat -tuln | grep 9001  
+netstat -tuln | grep 9001
 ``
 
-Add rules to firewall iptables:<br>
+Add rules to firewall iptables:
 
 ``
-sudo iptables -A INPUT -p tcp --dport 9001 -j ACCEPT  
+sudo iptables -A INPUT -p tcp --dport 9001 -j ACCEPT
 ``
 
-Enable websockets:<br>
+Enable websockets:
 
 ``
-protocol websockets  
+protocol websockets
 ``
 
-Enable anonymous users(only for tests):<br>
+Enable anonymous users(only for tests):
 
 ``
-allow_anonymous true  
+allow_anonymous true
 ``
 
-Permit logs:<br>
+Permit logs:
 
 ``
-log_type all  
+log_type all
 ``
 
-Log file path:<br>
+Log file path:
 
 ``
-log_dest file /var/log/mosquitto.log  
+log_dest file /var/log/mosquitto.log
 ``
-
-Create mosquitto log file:<br> 
-
-``
-sudo touch /var/log/mosquitto.log  
-``
-
-Set mosquitto log file owner:<br> 
+Create mosquitto log file:
 
 ``
-sudo chown mosquitto:mosquitto /var/log/mosquitto.log  
+sudo touch /var/log/mosquitto.log
 ``
 
-To give mosquitto permission to write:<br>  
+Set mosquitto log file owner:
 
 ``
-sudo chmod 640 /var/log/mosquitto.log  
+sudo chown mosquitto:mosquitto /var/log/mosquitto.log
 ``
 
-To monitor logs:<br>
+To give mosquitto permission to write:
 
 ``
-tail -f /var/log/mosquitto.log  
+sudo chmod 640 /var/log/mosquitto.log
 ``
 
+To monitor logs:
+
+``
+tail -f /var/log/mosquitto.log
+``
 
 For test: server(broker) -> MQTT_message(TOPIC=/led/state; DATA=(ON | OFF)) -> client(ESP32)<br>
 
