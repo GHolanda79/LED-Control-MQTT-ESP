@@ -18,41 +18,107 @@ This example can be executed on any ESP32 board, the required interface is WiFi 
 An mqtt broker (for example mosquitto) is required. To do this, you can use a Linux machine (example arch).
 
 Mosquitto installation in arch linux:
-`` sudo pacman -Syu mosquitto ``
-Enable service:
-`` sudo systemctl enable mosquitto ``
-Start Servcie:
-`` sudo systemctl start mosquitto ``
-Configure Mosquitto:
-Edit `` /etc/mosquitto/mosquitto.conf `` file.
-**Always restart after any changes:
-`` sudo systemctl restart mosquitto ``
-In the configuration file, uncomment and add the lines:
-`` listener 9001 ``
-Verify listen ports:
-`` netstat -tuln | grep 9001 ``
-Add rules to firewall iptables:
-`` sudo iptables -A INPUT -p tcp --dport 9001 -j ACCEPT ``
-Enable websockets:
-`` protocol websockets ``
-Enable anonymous users(only for tests):
-`` allow_anonymous true ``
-Permit logs:
-`` log_type all ``
-Log file path:
-`` log_dest file /var/log/mosquitto.log ``
-Create mosquitto log file:
-`` sudo touch /var/log/mosquitto.log ``
-Set mosquitto log file owner:
-`` sudo chown mosquitto:mosquitto /var/log/mosquitto.log ``
-To give mosquitto permission to write:
-`` sudo chmod 640 /var/log/mosquitto.log ``
-To monitor logs:
-`` tail -f /var/log/mosquitto.log ``
 
-For test:
-server(broker) -> MQTT_message(TOPIC=/led/state; DATA=(ON | OFF)) -> client(ESP32):
-`` mosquitto_pub -h serve_ip -t "TOPIC" -m "DATA" ``
+`` 
+sudo pacman -Syu mosquitto
+``
+
+Enable service:
+
+``
+sudo systemctl enable mosquitto 
+``
+
+Start Service:
+
+``
+sudo systemctl start mosquitto
+``
+
+Configure Mosquitto. Edit the file:
+
+``
+/etc/mosquitto/mosquitto.conf
+``
+
+**Always restart after any changes:
+
+``
+sudo systemctl restart mosquitto
+``
+
+In the configuration file, uncomment and add the lines:
+
+``
+listener 9001
+``
+
+Verify listen ports:
+
+``
+netstat -tuln | grep 9001
+``
+
+Add rules to firewall iptables:
+
+``
+sudo iptables -A INPUT -p tcp --dport 9001 -j ACCEPT
+``
+
+Enable websockets:
+
+``
+protocol websockets
+``
+
+Enable anonymous users(only for tests):
+
+``
+allow_anonymous true
+``
+
+Permit logs:
+
+``
+log_type all
+``
+
+Log file path:
+
+``
+log_dest file /var/log/mosquitto.log
+``
+
+Create mosquitto log file:
+
+``
+sudo touch /var/log/mosquitto.log
+``
+
+Set mosquitto log file owner:
+
+``
+sudo chown mosquitto:mosquitto /var/log/mosquitto.log
+``
+
+To give mosquitto permission to write:
+
+``
+sudo chmod 640 /var/log/mosquitto.log
+``
+
+To monitor logs:
+
+``
+tail -f /var/log/mosquitto.log
+``
+
+
+For test: server(broker) -> MQTT_message(TOPIC=/led/state; DATA=(ON | OFF)) -> client(ESP32)
+
+``
+mosquitto_pub -h serve_ip -t "TOPIC" -m "DATA"
+``
 
 
 ### Configure the project
